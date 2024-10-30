@@ -41,7 +41,7 @@ int main() {
             std::cout << "Num Peaks [" << i << "]: " << numPeaks[i] << std::endl;
             std::cout << "Avg Peak [" << i << "]: " << avgPeakVals[i] << std::endl;
         }
-        // 데이터를 주기적으로 가져오기 위한 대기 시간 (예: 1초)
+        // 데이터를 주기적으로 가져오기 위한 대기 시간
         sleep(0.1);
     }
 

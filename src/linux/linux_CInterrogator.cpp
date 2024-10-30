@@ -94,6 +94,17 @@ int CInterrogator::connectUDP() {
     // UDP 상태 업데이트
     std::cout << "UDP connection succeed" << std::endl;
     udpState = 0; // UDP 연결 성공
+
+    // recvfrom() 타임아웃 설정
+    struct timeval timeout;
+    timeout.tv_sec = 5;    // 타임아웃 시간 (초)
+    timeout.tv_usec = 0;   // 타임아웃 시간 (마이크로초)
+    if (setsockopt(udpSockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0) {
+        std::cerr << "Error setting socket timeout." << std::endl;
+        return -1;
+    }
+
+
     return 1; // 성공적으로 연결됨
 }
 
@@ -102,7 +113,7 @@ int CInterrogator::connectUDP() {
 void CInterrogator::enablePeakDatagrams() {
 	if (tcpSockfd >= 0) {
 		udpState = 4;
-		std::string addressPort = "10.0.0.72 51970";
+		std::string addressPort = "10.0.0.2 51970";
 		writeCommand("#EnableUdpPeakDatagrams", addressPort, 0);
 	}
 	else {
@@ -144,23 +155,29 @@ int CInterrogator::writeCommand(std::string command, std::string argument, uint8
 
 void CInterrogator::readPacket()
 {
+    uint8_t recvBuff[TOTAL_RECV_BUFF_BYTES] = {0};
+    socklen_t addrLen = sizeof(server_addr);
 
-	uint8_t recvBuff[TOTAL_RECV_BUFF_BYTES] = { 0, };
-	socklen_t addrLen = sizeof(server_addr); // 서버 주소의 길이
-    std::cout << "receiving packet ..." << std::endl;
+    std::cout << "Receiving packet ..." << std::endl;
     ssize_t packetSize = recvfrom(udpSockfd, recvBuff, sizeof(recvBuff), 0, (struct sockaddr*)&server_addr, &addrLen);
 
     if (packetSize < 0) {
-        std::cerr << "Error receiving packet." << std::endl;
-        return; // 수신 실패 시 종료
+        if (errno == EWOULDBLOCK || errno == EAGAIN) {
+            std::cerr << "Timeout: No packet received within the specified time." << std::endl;
+            memset(recvBuff, 0, sizeof(recvBuff)); // 타임아웃 시 버퍼 초기화
+            return;
+        } else {
+            std::cerr << "Error receiving packet." << std::endl;
+            return;
+        }
     }
 
-    std::cout << "packet is received" << std::endl;
-
-    // 패킷이 성공적으로 수신되면 처리
-    procPacket(recvBuff, packetSize);
-
+    std::cout << "Packet received successfully." << std::endl;
+    procPacket(recvBuff, packetSize); // 정상 패킷이 수신된 경우에만 처리
 }
+
+
+
 
 void CInterrogator::procPacket(uint8_t *packetChunk, int packetLength)
 {
