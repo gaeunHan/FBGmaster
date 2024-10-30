@@ -1,17 +1,25 @@
-cmake_minimum_required(VERSION 3.10) 
-project(FBGMaster_linux)  # project name
+# CMake 최소 버전 설정
+cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_STANDARD 11) 
+# 프로젝트 이름 및 언어 설정
+project(FBGmaster LANGUAGES CXX)
 
-set(EIGEN3_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include/eigen") 
-include_directories(${EIGEN3_INCLUDE_DIR})
+# C++ 표준 설정
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# src files
-set(SOURCES
-    # src/CCalibration.cpp
-    src/CInterrogator.cpp
-    src/CMainControl.cpp
+# 소스 파일 목록 설정
+set(SOURCE_FILES
+    src/linux/linux_CheckInterrogator.cpp
+    src/linux/linux_CInterrogator.cpp
 )
 
-# ceate executable file
-add_executable(FBGMaster_linux ${SOURCES}) 
+# 실행 파일 생성
+add_executable(FBGmaster ${SOURCE_FILES})
+
+# include 디렉토리 설정
+target_include_directories(FBGmaster PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+# 필요 시 추가 라이브러리 링크 (예: 네트워크 관련 라이브러리)
+target_link_libraries(FBGmaster PRIVATE pthread)
+

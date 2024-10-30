@@ -1,3 +1,5 @@
+// linux_CInterrogator.cpp
+
 #include "linux_CInterrogator.h"
 
 const std::string micronsIP = "10.0.0.55";
@@ -46,7 +48,7 @@ int CInterrogator::connectUDP() {
         return -1; 
     }
 
-    // 서버 주소 설정
+    // 서버 주소 설정 (TCP 연결용)
     memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(micronsPort);
@@ -70,9 +72,19 @@ int CInterrogator::connectUDP() {
         return -1; // 연결 실패
     }
 
+    std::cout << "TCP connection succeed" << std::endl;
+
+
+    // 로컬 주소 설정 (UDP 연결용)
+    struct sockaddr_in local_addr;
+    memset(&local_addr, 0, sizeof(local_addr));
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(51970); // 로컬 UDP 포트 설정
+    local_addr.sin_addr.s_addr = INADDR_ANY; // 모든 인터페이스에서 수신
+
     // TCP 연결 성공 시에만 UDP 소켓 바인딩
-    if (bind(udpSockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
-        std::cerr << "Error binding UDP socket." << std::endl;
+    if (bind(udpSockfd, (struct sockaddr*)&local_addr, sizeof(local_addr)) < 0) {
+        std::cerr << "Error binding UDP socket to local address." << std::endl;
         close(udpSockfd);
         close(tcpSockfd); 
         udpState = 3; // UDP 소켓 바인딩 실패
@@ -80,6 +92,7 @@ int CInterrogator::connectUDP() {
     }
 
     // UDP 상태 업데이트
+    std::cout << "UDP connection succeed" << std::endl;
     udpState = 0; // UDP 연결 성공
     return 1; // 성공적으로 연결됨
 }
@@ -89,7 +102,7 @@ int CInterrogator::connectUDP() {
 void CInterrogator::enablePeakDatagrams() {
 	if (tcpSockfd >= 0) {
 		udpState = 4;
-		std::string addressPort = "10.0.0.2 51970";
+		std::string addressPort = "10.0.0.72 51970";
 		writeCommand("#EnableUdpPeakDatagrams", addressPort, 0);
 	}
 	else {
@@ -134,12 +147,15 @@ void CInterrogator::readPacket()
 
 	uint8_t recvBuff[TOTAL_RECV_BUFF_BYTES] = { 0, };
 	socklen_t addrLen = sizeof(server_addr); // 서버 주소의 길이
+    std::cout << "receiving packet ..." << std::endl;
     ssize_t packetSize = recvfrom(udpSockfd, recvBuff, sizeof(recvBuff), 0, (struct sockaddr*)&server_addr, &addrLen);
 
     if (packetSize < 0) {
         std::cerr << "Error receiving packet." << std::endl;
         return; // 수신 실패 시 종료
     }
+
+    std::cout << "packet is received" << std::endl;
 
     // 패킷이 성공적으로 수신되면 처리
     procPacket(recvBuff, packetSize);
@@ -148,6 +164,8 @@ void CInterrogator::readPacket()
 
 void CInterrogator::procPacket(uint8_t *packetChunk, int packetLength)
 {
+    std::cout << "process packet" << std::endl;
+
 	double tempTime = 0.0;
 	//peakContents peakData;
 	memcpy(&ulTimeStampH, &packetChunk[16], sizeof(ulTimeStampH));

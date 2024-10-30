@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ghan/interrogator_porting/FBGmaster_linux
+CMAKE_SOURCE_DIR = /home/ghan/interrogator_porting/FBGmaster
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ghan/interrogator_porting/FBGmaster_linux/build
+CMAKE_BINARY_DIR = /home/ghan/interrogator_porting/FBGmaster/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ghan/interrogator_porting/FBGmaster_linux/build/CMakeFiles /home/ghan/interrogator_porting/FBGmaster_linux/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ghan/interrogator_porting/FBGmaster/build/CMakeFiles /home/ghan/interrogator_porting/FBGmaster/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ghan/interrogator_porting/FBGmaster_linux/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ghan/interrogator_porting/FBGmaster/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,71 +111,71 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named FBGMaster_linux
+# Target rules for targets named FBGmaster
 
 # Build rule for target.
-FBGMaster_linux: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 FBGMaster_linux
-.PHONY : FBGMaster_linux
+FBGmaster: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 FBGmaster
+.PHONY : FBGmaster
 
 # fast build rule for target.
-FBGMaster_linux/fast:
-	$(MAKE) -f CMakeFiles/FBGMaster_linux.dir/build.make CMakeFiles/FBGMaster_linux.dir/build
-.PHONY : FBGMaster_linux/fast
+FBGmaster/fast:
+	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/build
+.PHONY : FBGmaster/fast
 
-src/CInterrogator.o: src/CInterrogator.cpp.o
+src/linux/linux_CInterrogator.o: src/linux/linux_CInterrogator.cpp.o
 
-.PHONY : src/CInterrogator.o
-
-# target to build an object file
-src/CInterrogator.cpp.o:
-	$(MAKE) -f CMakeFiles/FBGMaster_linux.dir/build.make CMakeFiles/FBGMaster_linux.dir/src/CInterrogator.cpp.o
-.PHONY : src/CInterrogator.cpp.o
-
-src/CInterrogator.i: src/CInterrogator.cpp.i
-
-.PHONY : src/CInterrogator.i
-
-# target to preprocess a source file
-src/CInterrogator.cpp.i:
-	$(MAKE) -f CMakeFiles/FBGMaster_linux.dir/build.make CMakeFiles/FBGMaster_linux.dir/src/CInterrogator.cpp.i
-.PHONY : src/CInterrogator.cpp.i
-
-src/CInterrogator.s: src/CInterrogator.cpp.s
-
-.PHONY : src/CInterrogator.s
-
-# target to generate assembly for a file
-src/CInterrogator.cpp.s:
-	$(MAKE) -f CMakeFiles/FBGMaster_linux.dir/build.make CMakeFiles/FBGMaster_linux.dir/src/CInterrogator.cpp.s
-.PHONY : src/CInterrogator.cpp.s
-
-src/CMainControl.o: src/CMainControl.cpp.o
-
-.PHONY : src/CMainControl.o
+.PHONY : src/linux/linux_CInterrogator.o
 
 # target to build an object file
-src/CMainControl.cpp.o:
-	$(MAKE) -f CMakeFiles/FBGMaster_linux.dir/build.make CMakeFiles/FBGMaster_linux.dir/src/CMainControl.cpp.o
-.PHONY : src/CMainControl.cpp.o
+src/linux/linux_CInterrogator.cpp.o:
+	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.o
+.PHONY : src/linux/linux_CInterrogator.cpp.o
 
-src/CMainControl.i: src/CMainControl.cpp.i
+src/linux/linux_CInterrogator.i: src/linux/linux_CInterrogator.cpp.i
 
-.PHONY : src/CMainControl.i
+.PHONY : src/linux/linux_CInterrogator.i
 
 # target to preprocess a source file
-src/CMainControl.cpp.i:
-	$(MAKE) -f CMakeFiles/FBGMaster_linux.dir/build.make CMakeFiles/FBGMaster_linux.dir/src/CMainControl.cpp.i
-.PHONY : src/CMainControl.cpp.i
+src/linux/linux_CInterrogator.cpp.i:
+	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.i
+.PHONY : src/linux/linux_CInterrogator.cpp.i
 
-src/CMainControl.s: src/CMainControl.cpp.s
+src/linux/linux_CInterrogator.s: src/linux/linux_CInterrogator.cpp.s
 
-.PHONY : src/CMainControl.s
+.PHONY : src/linux/linux_CInterrogator.s
 
 # target to generate assembly for a file
-src/CMainControl.cpp.s:
-	$(MAKE) -f CMakeFiles/FBGMaster_linux.dir/build.make CMakeFiles/FBGMaster_linux.dir/src/CMainControl.cpp.s
-.PHONY : src/CMainControl.cpp.s
+src/linux/linux_CInterrogator.cpp.s:
+	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.s
+.PHONY : src/linux/linux_CInterrogator.cpp.s
+
+src/linux/linux_CheckInterrogator.o: src/linux/linux_CheckInterrogator.cpp.o
+
+.PHONY : src/linux/linux_CheckInterrogator.o
+
+# target to build an object file
+src/linux/linux_CheckInterrogator.cpp.o:
+	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.o
+.PHONY : src/linux/linux_CheckInterrogator.cpp.o
+
+src/linux/linux_CheckInterrogator.i: src/linux/linux_CheckInterrogator.cpp.i
+
+.PHONY : src/linux/linux_CheckInterrogator.i
+
+# target to preprocess a source file
+src/linux/linux_CheckInterrogator.cpp.i:
+	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.i
+.PHONY : src/linux/linux_CheckInterrogator.cpp.i
+
+src/linux/linux_CheckInterrogator.s: src/linux/linux_CheckInterrogator.cpp.s
+
+.PHONY : src/linux/linux_CheckInterrogator.s
+
+# target to generate assembly for a file
+src/linux/linux_CheckInterrogator.cpp.s:
+	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.s
+.PHONY : src/linux/linux_CheckInterrogator.cpp.s
 
 # Help Target
 help:
@@ -185,13 +185,13 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... FBGMaster_linux"
-	@echo "... src/CInterrogator.o"
-	@echo "... src/CInterrogator.i"
-	@echo "... src/CInterrogator.s"
-	@echo "... src/CMainControl.o"
-	@echo "... src/CMainControl.i"
-	@echo "... src/CMainControl.s"
+	@echo "... FBGmaster"
+	@echo "... src/linux/linux_CInterrogator.o"
+	@echo "... src/linux/linux_CInterrogator.i"
+	@echo "... src/linux/linux_CInterrogator.s"
+	@echo "... src/linux/linux_CheckInterrogator.o"
+	@echo "... src/linux/linux_CheckInterrogator.i"
+	@echo "... src/linux/linux_CheckInterrogator.s"
 .PHONY : help
 
 

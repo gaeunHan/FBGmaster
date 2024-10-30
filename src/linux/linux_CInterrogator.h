@@ -1,4 +1,4 @@
-// CInterrogator.h
+// linux_CInterrogator.h
 
 #ifndef _CINTERROGATOR_h
 #define _CINTERROGATOR_h

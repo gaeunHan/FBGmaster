@@ -1,4 +1,4 @@
-# Install script for directory: /home/ghan/interrogator_porting/FBGmaster_linux
+# Install script for directory: /home/ghan/interrogator_porting/FBGmaster
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/ghan/interrogator_porting/FBGmaster_linux/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/ghan/interrogator_porting/FBGmaster/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

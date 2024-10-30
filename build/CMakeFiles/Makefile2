@@ -44,16 +44,16 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ghan/interrogator_porting/FBGmaster_linux
+CMAKE_SOURCE_DIR = /home/ghan/interrogator_porting/FBGmaster
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ghan/interrogator_porting/FBGmaster_linux/build
+CMAKE_BINARY_DIR = /home/ghan/interrogator_porting/FBGmaster/build
 
 #=============================================================================
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/FBGMaster_linux.dir/all
+all: CMakeFiles/FBGmaster.dir/all
 
 .PHONY : all
 
@@ -63,36 +63,36 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/FBGMaster_linux.dir/clean
+clean: CMakeFiles/FBGmaster.dir/clean
 
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/FBGMaster_linux.dir
+# Target rules for target CMakeFiles/FBGmaster.dir
 
 # All Build rule for target.
-CMakeFiles/FBGMaster_linux.dir/all:
-	$(MAKE) -f CMakeFiles/FBGMaster_linux.dir/build.make CMakeFiles/FBGMaster_linux.dir/depend
-	$(MAKE) -f CMakeFiles/FBGMaster_linux.dir/build.make CMakeFiles/FBGMaster_linux.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ghan/interrogator_porting/FBGmaster_linux/build/CMakeFiles --progress-num=1,2,3 "Built target FBGMaster_linux"
-.PHONY : CMakeFiles/FBGMaster_linux.dir/all
+CMakeFiles/FBGmaster.dir/all:
+	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/depend
+	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ghan/interrogator_porting/FBGmaster/build/CMakeFiles --progress-num=1,2,3 "Built target FBGmaster"
+.PHONY : CMakeFiles/FBGmaster.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/FBGMaster_linux.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ghan/interrogator_porting/FBGmaster_linux/build/CMakeFiles 3
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/FBGMaster_linux.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ghan/interrogator_porting/FBGmaster_linux/build/CMakeFiles 0
-.PHONY : CMakeFiles/FBGMaster_linux.dir/rule
+CMakeFiles/FBGmaster.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ghan/interrogator_porting/FBGmaster/build/CMakeFiles 3
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/FBGmaster.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ghan/interrogator_porting/FBGmaster/build/CMakeFiles 0
+.PHONY : CMakeFiles/FBGmaster.dir/rule
 
 # Convenience name for target.
-FBGMaster_linux: CMakeFiles/FBGMaster_linux.dir/rule
+FBGmaster: CMakeFiles/FBGmaster.dir/rule
 
-.PHONY : FBGMaster_linux
+.PHONY : FBGmaster
 
 # clean rule for target.
-CMakeFiles/FBGMaster_linux.dir/clean:
-	$(MAKE) -f CMakeFiles/FBGMaster_linux.dir/build.make CMakeFiles/FBGMaster_linux.dir/clean
-.PHONY : CMakeFiles/FBGMaster_linux.dir/clean
+CMakeFiles/FBGmaster.dir/clean:
+	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/clean
+.PHONY : CMakeFiles/FBGmaster.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

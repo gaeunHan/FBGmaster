@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ghan/interrogator_porting/FBGmaster/src/linux/Macros.h
+
+/home/ghan/interrogator_porting/FBGmaster/src/linux/linux_CInterrogator.cpp
+linux_CInterrogator.h
+/home/ghan/interrogator_porting/FBGmaster/src/linux/linux_CInterrogator.h
+
+/home/ghan/interrogator_porting/FBGmaster/src/linux/linux_CInterrogator.h
+iostream
+-
+string
+-
+stdio.h
+-
+cstring
+-
+Macros.h
+/home/ghan/interrogator_porting/FBGmaster/src/linux/Macros.h
+sys/socket.h
+-
+arpa/inet.h
+-
+unistd.h
+-
+

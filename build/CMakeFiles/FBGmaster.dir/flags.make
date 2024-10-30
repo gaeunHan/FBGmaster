@@ -6,5 +6,5 @@ CXX_FLAGS =   -std=gnu++11
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/ghan/interrogator_porting/FBGmaster_linux/include/eigen 
+CXX_INCLUDES = -I/home/ghan/interrogator_porting/FBGmaster 
 
