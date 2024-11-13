@@ -150,32 +150,32 @@ src/linux/linux_CInterrogator.cpp.s:
 	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.s
 .PHONY : src/linux/linux_CInterrogator.cpp.s
 
-src/linux/linux_CheckInterrogator.o: src/linux/linux_CheckInterrogator.cpp.o
+src/linux/main.o: src/linux/main.cpp.o
 
-.PHONY : src/linux/linux_CheckInterrogator.o
+.PHONY : src/linux/main.o
 
 # target to build an object file
-src/linux/linux_CheckInterrogator.cpp.o:
-	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.o
-.PHONY : src/linux/linux_CheckInterrogator.cpp.o
+src/linux/main.cpp.o:
+	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/main.cpp.o
+.PHONY : src/linux/main.cpp.o
 
-src/linux/linux_CheckInterrogator.i: src/linux/linux_CheckInterrogator.cpp.i
+src/linux/main.i: src/linux/main.cpp.i
 
-.PHONY : src/linux/linux_CheckInterrogator.i
+.PHONY : src/linux/main.i
 
 # target to preprocess a source file
-src/linux/linux_CheckInterrogator.cpp.i:
-	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.i
-.PHONY : src/linux/linux_CheckInterrogator.cpp.i
+src/linux/main.cpp.i:
+	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/main.cpp.i
+.PHONY : src/linux/main.cpp.i
 
-src/linux/linux_CheckInterrogator.s: src/linux/linux_CheckInterrogator.cpp.s
+src/linux/main.s: src/linux/main.cpp.s
 
-.PHONY : src/linux/linux_CheckInterrogator.s
+.PHONY : src/linux/main.s
 
 # target to generate assembly for a file
-src/linux/linux_CheckInterrogator.cpp.s:
-	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.s
-.PHONY : src/linux/linux_CheckInterrogator.cpp.s
+src/linux/main.cpp.s:
+	$(MAKE) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/main.cpp.s
+.PHONY : src/linux/main.cpp.s
 
 # Help Target
 help:
@@ -189,9 +189,9 @@ help:
 	@echo "... src/linux/linux_CInterrogator.o"
 	@echo "... src/linux/linux_CInterrogator.i"
 	@echo "... src/linux/linux_CInterrogator.s"
-	@echo "... src/linux/linux_CheckInterrogator.o"
-	@echo "... src/linux/linux_CheckInterrogator.i"
-	@echo "... src/linux/linux_CheckInterrogator.s"
+	@echo "... src/linux/main.o"
+	@echo "... src/linux/main.i"
+	@echo "... src/linux/main.s"
 .PHONY : help
 
 

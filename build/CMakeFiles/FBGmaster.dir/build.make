@@ -57,18 +57,18 @@ include CMakeFiles/FBGmaster.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/FBGmaster.dir/flags.make
 
-CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.o: CMakeFiles/FBGmaster.dir/flags.make
-CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.o: ../src/linux/linux_CheckInterrogator.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ghan/interrogator_porting/FBGmaster/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.o -c /home/ghan/interrogator_porting/FBGmaster/src/linux/linux_CheckInterrogator.cpp
+CMakeFiles/FBGmaster.dir/src/linux/main.cpp.o: CMakeFiles/FBGmaster.dir/flags.make
+CMakeFiles/FBGmaster.dir/src/linux/main.cpp.o: ../src/linux/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ghan/interrogator_porting/FBGmaster/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/FBGmaster.dir/src/linux/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/FBGmaster.dir/src/linux/main.cpp.o -c /home/ghan/interrogator_porting/FBGmaster/src/linux/main.cpp
 
-CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ghan/interrogator_porting/FBGmaster/src/linux/linux_CheckInterrogator.cpp > CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.i
+CMakeFiles/FBGmaster.dir/src/linux/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/FBGmaster.dir/src/linux/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ghan/interrogator_porting/FBGmaster/src/linux/main.cpp > CMakeFiles/FBGmaster.dir/src/linux/main.cpp.i
 
-CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ghan/interrogator_porting/FBGmaster/src/linux/linux_CheckInterrogator.cpp -o CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.s
+CMakeFiles/FBGmaster.dir/src/linux/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/FBGmaster.dir/src/linux/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ghan/interrogator_porting/FBGmaster/src/linux/main.cpp -o CMakeFiles/FBGmaster.dir/src/linux/main.cpp.s
 
 CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.o: CMakeFiles/FBGmaster.dir/flags.make
 CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.o: ../src/linux/linux_CInterrogator.cpp
@@ -85,13 +85,13 @@ CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.s: cmake_force
 
 # Object files for target FBGmaster
 FBGmaster_OBJECTS = \
-"CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.o" \
+"CMakeFiles/FBGmaster.dir/src/linux/main.cpp.o" \
 "CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.o"
 
 # External object files for target FBGmaster
 FBGmaster_EXTERNAL_OBJECTS =
 
-FBGmaster: CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.o
+FBGmaster: CMakeFiles/FBGmaster.dir/src/linux/main.cpp.o
 FBGmaster: CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.o
 FBGmaster: CMakeFiles/FBGmaster.dir/build.make
 FBGmaster: CMakeFiles/FBGmaster.dir/link.txt

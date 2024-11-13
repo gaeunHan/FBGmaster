@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # 소스 파일 목록 설정
 set(SOURCE_FILES
-    src/linux/linux_CheckInterrogator.cpp
+    src/linux/main.cpp
     src/linux/linux_CInterrogator.cpp
 )
 

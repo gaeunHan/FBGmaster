@@ -5,7 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/ghan/interrogator_porting/FBGmaster/src/linux/linux_CInterrogator.cpp" "/home/ghan/interrogator_porting/FBGmaster/build/CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.o"
-  "/home/ghan/interrogator_porting/FBGmaster/src/linux/linux_CheckInterrogator.cpp" "/home/ghan/interrogator_porting/FBGmaster/build/CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.o"
+  "/home/ghan/interrogator_porting/FBGmaster/src/linux/main.cpp" "/home/ghan/interrogator_porting/FBGmaster/build/CMakeFiles/FBGmaster.dir/src/linux/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

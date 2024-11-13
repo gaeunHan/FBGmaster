@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.o"
-  "CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.o"
+  "CMakeFiles/FBGmaster.dir/src/linux/main.cpp.o"
   "FBGmaster"
   "FBGmaster.pdb"
 )

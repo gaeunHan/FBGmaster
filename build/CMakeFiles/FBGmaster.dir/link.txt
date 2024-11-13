@@ -1,1 +1,1 @@
-/usr/bin/c++     CMakeFiles/FBGmaster.dir/src/linux/linux_CheckInterrogator.cpp.o CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.o  -o FBGmaster  -lpthread 
+/usr/bin/c++     CMakeFiles/FBGmaster.dir/src/linux/main.cpp.o CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.o  -o FBGmaster  -lpthread 
