@@ -6,7 +6,7 @@
 #include "posix_rt.h"
 #include "linux_CInterrogator.h"
 
-// FSM 상태 열거형
+// FSM
 enum InterrogatorState {
     INIT_STATE,
     CONNECT_UDP,
@@ -16,14 +16,14 @@ enum InterrogatorState {
     DISCONNECT_STATE
 };
 
-// Interrogator 통신 클래스
+// Interrogator communication class
 class InterrogatorManager {
 private:
     CInterrogator interrogator;
     InterrogatorState currentState;
     POSIX_TASK rtTask;
 
-    // 상태 전이 로직
+    // state translation logic
     InterrogatorState processState() {
         switch(currentState) {
             case INIT_STATE: {
@@ -32,7 +32,7 @@ private:
             }
             case CONNECT_UDP: {
                 if (interrogator.connectUDP() < 0) {
-                    DBG_ERROR("UDP 연결 실패");
+                    DBG_ERROR("UDP connection fail.");
                     return ERROR_STATE;
                 }
                 return ENABLE_PEAKS;
@@ -51,7 +51,7 @@ private:
 
                 interrogator.getPeaks(timeStamp, numPeaks, peakVals, avgPeakVals);
                 
-                // 로깅 또는 추가 처리
+                // print the data
                 DBG_INFO("Timestamp: %f", timeStamp);
                 for (int i = 0; i < 4; ++i) {
                     DBG_INFO("Num Peaks [%d]: %d", i, numPeaks[i]);
@@ -61,7 +61,7 @@ private:
                 return READ_PEAKS;
             }
             case ERROR_STATE: {
-                // 오류 복구 로직
+                // error recovery
                 interrogator.disconnectUDP();
                 sleep(1);
                 return INIT_STATE;
@@ -75,7 +75,7 @@ private:
         }
     }
 
-    // RT 태스크 콜백 함수
+    // RT task callback function
     static void rtTaskCallback(void* arg) {
         InterrogatorManager* manager = static_cast<InterrogatorManager*>(arg);
         
@@ -89,21 +89,21 @@ public:
     InterrogatorManager() : currentState(INIT_STATE) {}
 
     int initRTTask() {
-        // RT 태스크 생성 및 설정
+        // create RT task
         if (create_rt_task(&rtTask, (const PCHAR)"INTERROGATOR_TASK", 0, 97) != RET_SUCC) {
-            DBG_ERROR("RT 태스크 생성 실패");
+            DBG_ERROR("fail to create RT task");
             return RET_FAIL;
         }
 
-        // 1ms 주기 설정
+        // set RT period
         if (set_task_period(&rtTask, SET_TM_NOW, 1000000) != RET_SUCC) {
-            DBG_ERROR("태스크 주기 설정 실패");
+            DBG_ERROR("fail to set RT period");
             return RET_FAIL;
         }
 
-        // 태스크 시작
+        // start RT task
         if (start_task(&rtTask, rtTaskCallback, this) != RET_SUCC) {
-            DBG_ERROR("RT 태스크 시작 실패");
+            DBG_ERROR("fail to start RT task");
             return RET_FAIL;
         }
 
@@ -111,7 +111,7 @@ public:
     }
 
     void signalHandler(int signal) {
-        DBG_INFO("시그널 수신: %d", signal);
+        DBG_INFO("RT-POSIX has been signalled [%d]", signal);
         currentState = DISCONNECT_STATE;
     }
 };
@@ -128,26 +128,26 @@ void globalSignalHandler(int signal) {
 }
 
 int main() {
-    // 시그널 핸들러 설정
+    // signal handler
     signal(SIGTERM, globalSignalHandler);
     signal(SIGINT, globalSignalHandler);
 
-    // 메모리 잠금
+    /* Lock all current and future pages from preventing of being paged to swap */
     mlockall(MCL_CURRENT | MCL_FUTURE);
 
-    // 로거 초기화
+    // init logger
     init_lowlevel_logger(TRUE);
 
-    // Interrogator 관리자 생성
+    // create an interrogator manager
     InterrogatorManager manager;
 
-    // RT 태스크 초기화
+    // init RT task
     if (manager.initRTTask() != RET_SUCC) {
-        DBG_ERROR("RT 태스크 초기화 실패");
+        DBG_ERROR("fail to init RT task");
         return RET_FAIL;
     }
 
-    // 무한 대기
+    // infinite wait
     pause();
 
     return RET_SUCC;
