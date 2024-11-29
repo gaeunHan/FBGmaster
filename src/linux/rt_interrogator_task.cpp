@@ -22,6 +22,7 @@ private:
     CInterrogator interrogator;
     InterrogatorState currentState;
     POSIX_TASK rtTask;
+    long maxPeriod;
 
     // state translation logic
     InterrogatorState processState() {
@@ -52,10 +53,10 @@ private:
                 interrogator.getPeaks(timeStamp, numPeaks, peakVals, avgPeakVals);
                 
                 // print the data
-                DBG_INFO("Timestamp: %f", timeStamp);
+                printf("Timestamp: %f\n", timeStamp);
                 for (int i = 0; i < 4; ++i) {
-                    DBG_INFO("Num Peaks [%d]: %d", i, numPeaks[i]);
-                    DBG_INFO("Avg Peak [%d]: %f", i, avgPeakVals[i]);
+                    printf("Num Peaks [%d]: %d\n", i, numPeaks[i]);
+                    printf("Avg Peak [%d]: %f\n", i, avgPeakVals[i]);
                 }
 
                 return READ_PEAKS;
@@ -75,18 +76,40 @@ private:
         }
     }
 
-    // RT task callback function
+    // // RT task callback function
+    // static void rtTaskCallback(void* arg) {
+    //     InterrogatorManager* manager = static_cast<InterrogatorManager*>(arg);
+        
+    //     while(1) {
+    //         manager->currentState = manager->processState();
+    //         wait_next_period(NULL);
+    //     }
+    // }
+
+    //RT 태스크 콜백 함수 수정 for RT debugging
     static void rtTaskCallback(void* arg) {
         InterrogatorManager* manager = static_cast<InterrogatorManager*>(arg);
-        
+        struct timespec start, end;
+
         while(1) {
+            clock_gettime(CLOCK_MONOTONIC, &start);  // 태스크 시작 시간 기록
+
             manager->currentState = manager->processState();
-            wait_next_period(NULL);
+
+            clock_gettime(CLOCK_MONOTONIC, &end);  // 태스크 종료 시간 기록
+
+            long elapsed = (end.tv_sec - start.tv_sec) * 1000000000L + (end.tv_nsec - start.tv_nsec);
+            if (elapsed > manager->maxPeriod) manager->maxPeriod = elapsed;
+            printf("Task Period: %ld.%07ld ms, Max Period: %ld.%07ld ms\n",
+                elapsed / 1000000, elapsed % 1000000,
+                manager->maxPeriod / 1000000, manager->maxPeriod % 1000000);
+
+            wait_next_period(NULL);  // 다음 주기 대기
         }
     }
 
 public:
-    InterrogatorManager() : currentState(INIT_STATE) {}
+    InterrogatorManager() : currentState(INIT_STATE),maxPeriod(0) {}
 
     int initRTTask() {
         // create RT task
