@@ -1,25 +1,22 @@
-# CMake 최소 버전 설정
 cmake_minimum_required(VERSION 3.10)
-
-# 프로젝트 이름 및 언어 설정
-project(FBGmaster LANGUAGES CXX)
+project(InterrogatorComm)
 
 # C++ 표준 설정
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# 소스 파일 목록 설정
-set(SOURCE_FILES
-    src/linux/main.cpp
-    src/linux/linux_CInterrogator.cpp
-)
+# include 디렉토리 추가
+include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(/opt/rt_posix/include)  # posix_rt.h 경로 추가
 
-# 실행 파일 생성
-add_executable(FBGmaster ${SOURCE_FILES})
+# Library directory 설정
+link_directories(/opt/rt_posix/lib)
 
-# include 디렉토리 설정
-target_include_directories(FBGmaster PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+# 실행 파일 1: FBGmaster
+set(CSV_SOURCES src/linux/main.cpp src/linux/linux_CInterrogator.cpp)
+add_executable(FBGmaster ${CSV_SOURCES})
+target_link_libraries(FBGmaster PRIVATE rtposix)  # librtposix.so를 링크
 
-# 필요 시 추가 라이브러리 링크 (예: 네트워크 관련 라이브러리)
-target_link_libraries(FBGmaster PRIVATE pthread)
-
+# 실행 파일 2: RT_FBGmaster
+set(TWO_SOURCES src/linux/rt_interrogator_task.cpp src/linux/linux_CInterrogator.cpp)
+add_executable(RT_FBGmaster ${TWO_SOURCES})
+target_link_libraries(RT_FBGmaster PRIVATE rtposix)  # librtposix.so를 링크
