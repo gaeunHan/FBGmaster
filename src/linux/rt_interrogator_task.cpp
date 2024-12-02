@@ -3,10 +3,13 @@
 #include <unistd.h>
 #include <signal.h>
 #include <sys/mman.h>
+#include <queue>
+#include <mutex>
+#include <condition_variable>
 #include "posix_rt.h"
 #include "linux_CInterrogator.h"
 
-// FSM
+// FSM states
 enum InterrogatorState {
     INIT_STATE,
     CONNECT_UDP,
@@ -16,16 +19,57 @@ enum InterrogatorState {
     DISCONNECT_STATE
 };
 
+// Peak data structure for inter-task communication
+struct PeakData {
+    double timeStamp;
+    short numPeaks[4];
+    double peakVals[PEAK_CH * NUM_GRATING];
+    double avgPeakVals[PEAK_CH];
+};
+
+// Thread-safe peak data queue
+class PeakDataQueue {
+private:
+    std::queue<PeakData> dataQueue;
+    std::mutex mtx;
+    std::condition_variable cv;
+    const size_t MAX_QUEUE_SIZE = 10;
+
+public:
+    void push(const PeakData& data) {
+        std::unique_lock<std::mutex> lock(mtx);
+        cv.wait(lock, [this]{ return dataQueue.size() < MAX_QUEUE_SIZE; });
+        
+        dataQueue.push(data);
+        lock.unlock();
+        cv.notify_one();
+    }
+
+    PeakData pop() {
+        std::unique_lock<std::mutex> lock(mtx);
+        cv.wait(lock, [this]{ return !dataQueue.empty(); });
+        
+        PeakData data = dataQueue.front();
+        dataQueue.pop();
+        lock.unlock();
+        cv.notify_one();
+        
+        return data;
+    }
+};
+
 // Interrogator communication class
 class InterrogatorManager {
 private:
     CInterrogator interrogator;
     InterrogatorState currentState;
     POSIX_TASK rtTask;
-    long maxPeriod;
+    pthread_t nrtThreadId;
+    PeakDataQueue peakDataQueue;
+    RTTIME maxPeriod;
 
-    // state translation logic
-    InterrogatorState processState() {
+    // State transition logic for RT task
+    InterrogatorState processRTState() {
         switch(currentState) {
             case INIT_STATE: {
                 interrogator.init();
@@ -33,7 +77,7 @@ private:
             }
             case CONNECT_UDP: {
                 if (interrogator.connectUDP() < 0) {
-                    DBG_ERROR("UDP connection fail.");
+                    DBG_ERROR("UDP connection failed.");
                     return ERROR_STATE;
                 }
                 return ENABLE_PEAKS;
@@ -45,24 +89,20 @@ private:
             case READ_PEAKS: {
                 interrogator.readPacket();
                 
-                double timeStamp;
-                short numPeaks[4];
-                double peakVals[PEAK_CH * NUM_GRATING];
-                double avgPeakVals[PEAK_CH];
-
-                interrogator.getPeaks(timeStamp, numPeaks, peakVals, avgPeakVals);
+                PeakData peakData;
+                interrogator.getPeaks(
+                    peakData.timeStamp, 
+                    peakData.numPeaks, 
+                    peakData.peakVals, 
+                    peakData.avgPeakVals
+                );
                 
-                // print the data
-                printf("Timestamp: %f\n", timeStamp);
-                for (int i = 0; i < 4; ++i) {
-                    printf("Num Peaks [%d]: %d\n", i, numPeaks[i]);
-                    printf("Avg Peak [%d]: %f\n", i, avgPeakVals[i]);
-                }
+                // Push peak data to queue (non-blocking)
+                peakDataQueue.push(peakData);
 
                 return READ_PEAKS;
             }
             case ERROR_STATE: {
-                // error recovery
                 interrogator.disconnectUDP();
                 sleep(1);
                 return INIT_STATE;
@@ -76,57 +116,80 @@ private:
         }
     }
 
-    // // RT task callback function
-    // static void rtTaskCallback(void* arg) {
-    //     InterrogatorManager* manager = static_cast<InterrogatorManager*>(arg);
-        
-    //     while(1) {
-    //         manager->currentState = manager->processState();
-    //         wait_next_period(NULL);
-    //     }
-    // }
-
-    //RT 태스크 콜백 함수 수정 for RT debugging
+    // RT task callback function with performance monitoring
     static void rtTaskCallback(void* arg) {
         InterrogatorManager* manager = static_cast<InterrogatorManager*>(arg);
-        struct timespec start, end;
+        int nCnt = 0;
+        RTTIME tmCurrent = 0, tmPrev = 0, tmPeriod = 0, tmMaxPeriod = 0;
 
         while(1) {
-            clock_gettime(CLOCK_MONOTONIC, &start);  // 태스크 시작 시간 기록
+            wait_next_period(NULL);
+            tmCurrent = read_timer();
+            
+            manager->currentState = manager->processRTState();
 
-            manager->currentState = manager->processState();
+            if(1001<nCnt){
+                tmPeriod = tmCurrent - tmPrev;
+                if(tmPeriod > tmMaxPeriod) tmMaxPeriod = tmPeriod;
+            }
+            tmPrev = tmCurrent;
 
-            clock_gettime(CLOCK_MONOTONIC, &end);  // 태스크 종료 시간 기록
-
-            long elapsed = (end.tv_sec - start.tv_sec) * 1000000000L + (end.tv_nsec - start.tv_nsec);
-            if (elapsed > manager->maxPeriod) manager->maxPeriod = elapsed;
-            printf("Task Period: %ld.%07ld ms, Max Period: %ld.%07ld ms\n",
-                elapsed / 1000000, elapsed % 1000000,
-                manager->maxPeriod / 1000000, manager->maxPeriod % 1000000);
-
-            wait_next_period(NULL);  // 다음 주기 대기
+            // if(!(nCnt % 1000)){
+            //     printf("Task Period: %lu.%06lums, Max Period: %lu.%06lums", tmPeriod/1000000, tmPeriod%1000000, tmMaxPeriod/1000000, tmMaxPeriod%1000000);
+            // }
+            printf("Task Period: %lu.%06lums, Max Period: %lu.%06lums\n", tmPeriod/1000000, tmPeriod%1000000, tmMaxPeriod/1000000, tmMaxPeriod%1000000);
+            nCnt++;
         }
     }
 
+    // NRT task callback function for data processing
+    static void* nrtTaskCallback(void* arg) {
+        InterrogatorManager* manager = static_cast<InterrogatorManager*>(arg);
+        
+        // 스레드 우선순위 설정 (옵션)
+        struct sched_param param;
+        param.sched_priority = 50;  // 기본 우선순위
+        pthread_setschedparam(pthread_self(), SCHED_OTHER, &param);
+
+        while(1) {
+            PeakData peakData = manager->peakDataQueue.pop();
+            
+            // 로깅 및 데이터 처리
+            printf("Timestamp: %f\n", peakData.timeStamp);
+            for (int i = 0; i < 4; ++i) {
+                printf("Num Peaks [%d]: %d\n", i, peakData.numPeaks[i]);
+                printf("Avg Peak [%d]: %f\n", i, peakData.avgPeakVals[i]);
+            }
+        }
+        return NULL;
+    }
+
 public:
-    InterrogatorManager() : currentState(INIT_STATE),maxPeriod(0) {}
+    InterrogatorManager() : currentState(INIT_STATE), maxPeriod(0) {}
 
     int initRTTask() {
-        // create RT task
-        if (create_rt_task(&rtTask, (const PCHAR)"INTERROGATOR_TASK", 0, 97) != RET_SUCC) {
-            DBG_ERROR("fail to create RT task");
+        // Create RT task
+        if (create_rt_task(&rtTask, (const PCHAR)"INTERROGATOR_RT_TASK", 0, 99) != RET_SUCC) {
+            DBG_ERROR("Failed to create RT task");
             return RET_FAIL;
         }
 
-        // set RT period
-        if (set_task_period(&rtTask, SET_TM_NOW, 1000000) != RET_SUCC) {
-            DBG_ERROR("fail to set RT period");
+        // Set RT task period (1ms)
+        if (set_task_period(&rtTask, SET_TM_NOW, 500000) != RET_SUCC) {
+            DBG_ERROR("Failed to set RT task period");
             return RET_FAIL;
         }
 
-        // start RT task
+        // Start RT task
         if (start_task(&rtTask, rtTaskCallback, this) != RET_SUCC) {
-            DBG_ERROR("fail to start RT task");
+            DBG_ERROR("Failed to start RT task");
+            return RET_FAIL;
+        }
+
+        // Create NRT task
+        int result = pthread_create(&nrtThreadId, NULL, nrtTaskCallback, this);
+        if (result != 0) {
+            DBG_ERROR("Failed to create NRT thread");
             return RET_FAIL;
         }
 
@@ -151,26 +214,26 @@ void globalSignalHandler(int signal) {
 }
 
 int main() {
-    // signal handler
+    // Signal handler setup
     signal(SIGTERM, globalSignalHandler);
     signal(SIGINT, globalSignalHandler);
 
-    /* Lock all current and future pages from preventing of being paged to swap */
+    // Lock memory to prevent paging
     mlockall(MCL_CURRENT | MCL_FUTURE);
 
-    // init logger
+    // Initialize logger
     init_lowlevel_logger(TRUE);
 
-    // create an interrogator manager
+    // Create interrogator manager
     InterrogatorManager manager;
 
-    // init RT task
+    // Initialize RT and NRT tasks
     if (manager.initRTTask() != RET_SUCC) {
-        DBG_ERROR("fail to init RT task");
+        DBG_ERROR("Failed to initialize tasks");
         return RET_FAIL;
     }
 
-    // infinite wait
+    // Infinite wait
     pause();
 
     return RET_SUCC;
