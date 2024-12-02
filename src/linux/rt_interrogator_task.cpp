@@ -9,6 +9,8 @@
 #include "posix_rt.h"
 #include "linux_CInterrogator.h"
 
+#define ETHERCAT_TASK_PERIOD (1000000) // 1 ms
+
 // FSM states
 enum InterrogatorState {
     INIT_STATE,
@@ -134,10 +136,10 @@ private:
             }
             tmPrev = tmCurrent;
 
-            // if(!(nCnt % 1000)){
-            //     printf("Task Period: %lu.%06lums, Max Period: %lu.%06lums", tmPeriod/1000000, tmPeriod%1000000, tmMaxPeriod/1000000, tmMaxPeriod%1000000);
-            // }
-            printf("Task Period: %lu.%06lums, Max Period: %lu.%06lums\n", tmPeriod/1000000, tmPeriod%1000000, tmMaxPeriod/1000000, tmMaxPeriod%1000000);
+            if(!(nCnt % 1000)){
+                printf("Task Period: %lu.%06lums, Max Period: %lu.%06lums\n", tmPeriod/1000000, tmPeriod%1000000, tmMaxPeriod/1000000, tmMaxPeriod%1000000);
+            }
+            // printf("Task Period: %lu.%06lums, Max Period: %lu.%06lums\n", tmPeriod/1000000, tmPeriod%1000000, tmMaxPeriod/1000000, tmMaxPeriod%1000000);
             nCnt++;
         }
     }
@@ -145,6 +147,7 @@ private:
     // NRT task callback function for data processing
     static void* nrtTaskCallback(void* arg) {
         InterrogatorManager* manager = static_cast<InterrogatorManager*>(arg);
+        int nCnt = 0;
         
         // 스레드 우선순위 설정 (옵션)
         struct sched_param param;
@@ -155,11 +158,17 @@ private:
             PeakData peakData = manager->peakDataQueue.pop();
             
             // 로깅 및 데이터 처리
-            printf("Timestamp: %f\n", peakData.timeStamp);
-            for (int i = 0; i < 4; ++i) {
-                printf("Num Peaks [%d]: %d\n", i, peakData.numPeaks[i]);
-                printf("Avg Peak [%d]: %f\n", i, peakData.avgPeakVals[i]);
+            
+            if(!(nCnt % 1000)){
+                printf("Timestamp: %f\n", peakData.timeStamp);
+                for (int i = 0; i < 4; ++i) {
+                    printf("Num Peaks [%d]: %d\n", i, peakData.numPeaks[i]);
+                    printf("Avg Peak [%d]: %f\n", i, peakData.avgPeakVals[i]);
+                }
+                printf("\n\n");
             }
+            nCnt++;
+
         }
         return NULL;
     }
@@ -175,7 +184,7 @@ public:
         }
 
         // Set RT task period (1ms)
-        if (set_task_period(&rtTask, SET_TM_NOW, 500000) != RET_SUCC) {
+        if (set_task_period(&rtTask, SET_TM_NOW, ETHERCAT_TASK_PERIOD) != RET_SUCC) {
             DBG_ERROR("Failed to set RT task period");
             return RET_FAIL;
         }
@@ -197,6 +206,7 @@ public:
     }
 
     void signalHandler(int signal) {
+        init_lowlevel_logger(TRUE);
         DBG_INFO("RT-POSIX has been signalled [%d]", signal);
         currentState = DISCONNECT_STATE;
     }
@@ -217,12 +227,13 @@ int main() {
     // Signal handler setup
     signal(SIGTERM, globalSignalHandler);
     signal(SIGINT, globalSignalHandler);
+    init_lowlevel_logger(TRUE);    
 
     // Lock memory to prevent paging
     mlockall(MCL_CURRENT | MCL_FUTURE);
 
     // Initialize logger
-    init_lowlevel_logger(TRUE);
+    init_lowlevel_logger(FALSE);
 
     // Create interrogator manager
     InterrogatorManager manager;

@@ -158,7 +158,7 @@ void CInterrogator::readPacket()
     uint8_t recvBuff[TOTAL_RECV_BUFF_BYTES] = {0};
     socklen_t addrLen = sizeof(server_addr);
 
-    std::cout << "Receiving packet ..." << std::endl;
+    //std::cout << "Receiving packet ..." << std::endl;
     ssize_t packetSize = recvfrom(udpSockfd, recvBuff, sizeof(recvBuff), 0, (struct sockaddr*)&server_addr, &addrLen);
 
     if (packetSize < 0) {
@@ -172,7 +172,7 @@ void CInterrogator::readPacket()
         }
     }
 
-    std::cout << "Packet received successfully." << std::endl;
+    //std::cout << "Packet received successfully." << std::endl;
     procPacket(recvBuff, packetSize); // 정상 패킷이 수신된 경우에만 처리
 }
 
@@ -181,7 +181,7 @@ void CInterrogator::readPacket()
 
 void CInterrogator::procPacket(uint8_t *packetChunk, int packetLength)
 {
-    std::cout << "process packet" << std::endl;
+    //std::cout << "process packet" << std::endl;
 
 	double tempTime = 0.0;
 	//peakContents peakData;
