@@ -25,14 +25,15 @@ struct InterrogatorData
     short numPeaks[4];
     double peakVals[PEAK_CH * NUM_GRATING];
     double avgPeakVals[PEAK_CH];
-}
+};
 
 CInterrogator interrogator;
 InterrogatorState currentState;
+InterrogatorData data;
 POSIX_TASK g_taskInterrogator;
 //POSIX_TASK g_taskKeyIn;
 
-void DoTask()
+InterrogatorState DoTask()
 {
     switch(currentState) {
         case INIT_STATE: {
@@ -52,9 +53,7 @@ void DoTask()
             return READ_PEAKS;
         }
         case READ_PEAKS: {
-            interrogator.readPacket();
-
-            InterrogatorData data;
+            interrogator.readPacket();            
 
             interrogator.getPeaks(data.timeStamp, data.numPeaks, data.peakVals, data.avgPeakVals);
 
@@ -91,8 +90,6 @@ void proc_interrogator_task(void* arg)
         tmCurrent = read_timer();
 
         DoTask();
-        
-        tmEcatSend = read_timer();
 
         if (1001 < nCnt)
         {
@@ -104,7 +101,7 @@ void proc_interrogator_task(void* arg)
 
         if (!(nCnt % 1000)) // print every second
         {
-            printf("Task Period:%lu.%06lums, Max Period:%lu.%03lu us\n", tmPeriod / 1000000, tmPeriod % 1000000, tmMaxPeriod / 1000000, tmMaxPeriod % 1000000); 
+            printf("Task Period:%lu.%06lums, Max Period:%lu.%06lu ms\n", tmPeriod / 1000000, tmPeriod % 1000000, tmMaxPeriod / 1000000, tmMaxPeriod % 1000000); 
             
             printf("Timestamp: %f\n", data.timeStamp);
 

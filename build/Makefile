@@ -142,6 +142,19 @@ RT_FBGmaster/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RT_FBGmaster.dir/build.make CMakeFiles/RT_FBGmaster.dir/build
 .PHONY : RT_FBGmaster/fast
 
+#=============================================================================
+# Target rules for targets named RTver2_FBGmaster
+
+# Build rule for target.
+RTver2_FBGmaster: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 RTver2_FBGmaster
+.PHONY : RTver2_FBGmaster
+
+# fast build rule for target.
+RTver2_FBGmaster/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RTver2_FBGmaster.dir/build.make CMakeFiles/RTver2_FBGmaster.dir/build
+.PHONY : RTver2_FBGmaster/fast
+
 src/linux/linux_CInterrogator.o: src/linux/linux_CInterrogator.cpp.o
 .PHONY : src/linux/linux_CInterrogator.o
 
@@ -149,6 +162,7 @@ src/linux/linux_CInterrogator.o: src/linux/linux_CInterrogator.cpp.o
 src/linux/linux_CInterrogator.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RT_FBGmaster.dir/build.make CMakeFiles/RT_FBGmaster.dir/src/linux/linux_CInterrogator.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RTver2_FBGmaster.dir/build.make CMakeFiles/RTver2_FBGmaster.dir/src/linux/linux_CInterrogator.cpp.o
 .PHONY : src/linux/linux_CInterrogator.cpp.o
 
 src/linux/linux_CInterrogator.i: src/linux/linux_CInterrogator.cpp.i
@@ -158,6 +172,7 @@ src/linux/linux_CInterrogator.i: src/linux/linux_CInterrogator.cpp.i
 src/linux/linux_CInterrogator.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RT_FBGmaster.dir/build.make CMakeFiles/RT_FBGmaster.dir/src/linux/linux_CInterrogator.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RTver2_FBGmaster.dir/build.make CMakeFiles/RTver2_FBGmaster.dir/src/linux/linux_CInterrogator.cpp.i
 .PHONY : src/linux/linux_CInterrogator.cpp.i
 
 src/linux/linux_CInterrogator.s: src/linux/linux_CInterrogator.cpp.s
@@ -167,6 +182,7 @@ src/linux/linux_CInterrogator.s: src/linux/linux_CInterrogator.cpp.s
 src/linux/linux_CInterrogator.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/FBGmaster.dir/build.make CMakeFiles/FBGmaster.dir/src/linux/linux_CInterrogator.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RT_FBGmaster.dir/build.make CMakeFiles/RT_FBGmaster.dir/src/linux/linux_CInterrogator.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RTver2_FBGmaster.dir/build.make CMakeFiles/RTver2_FBGmaster.dir/src/linux/linux_CInterrogator.cpp.s
 .PHONY : src/linux/linux_CInterrogator.cpp.s
 
 src/linux/main.o: src/linux/main.cpp.o
@@ -217,6 +233,30 @@ src/linux/rt_interrogator_task.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RT_FBGmaster.dir/build.make CMakeFiles/RT_FBGmaster.dir/src/linux/rt_interrogator_task.cpp.s
 .PHONY : src/linux/rt_interrogator_task.cpp.s
 
+src/linux/rt_ver2.o: src/linux/rt_ver2.cpp.o
+.PHONY : src/linux/rt_ver2.o
+
+# target to build an object file
+src/linux/rt_ver2.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RTver2_FBGmaster.dir/build.make CMakeFiles/RTver2_FBGmaster.dir/src/linux/rt_ver2.cpp.o
+.PHONY : src/linux/rt_ver2.cpp.o
+
+src/linux/rt_ver2.i: src/linux/rt_ver2.cpp.i
+.PHONY : src/linux/rt_ver2.i
+
+# target to preprocess a source file
+src/linux/rt_ver2.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RTver2_FBGmaster.dir/build.make CMakeFiles/RTver2_FBGmaster.dir/src/linux/rt_ver2.cpp.i
+.PHONY : src/linux/rt_ver2.cpp.i
+
+src/linux/rt_ver2.s: src/linux/rt_ver2.cpp.s
+.PHONY : src/linux/rt_ver2.s
+
+# target to generate assembly for a file
+src/linux/rt_ver2.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RTver2_FBGmaster.dir/build.make CMakeFiles/RTver2_FBGmaster.dir/src/linux/rt_ver2.cpp.s
+.PHONY : src/linux/rt_ver2.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -227,6 +267,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... FBGmaster"
 	@echo "... RT_FBGmaster"
+	@echo "... RTver2_FBGmaster"
 	@echo "... src/linux/linux_CInterrogator.o"
 	@echo "... src/linux/linux_CInterrogator.i"
 	@echo "... src/linux/linux_CInterrogator.s"
@@ -236,6 +277,9 @@ help:
 	@echo "... src/linux/rt_interrogator_task.o"
 	@echo "... src/linux/rt_interrogator_task.i"
 	@echo "... src/linux/rt_interrogator_task.s"
+	@echo "... src/linux/rt_ver2.o"
+	@echo "... src/linux/rt_ver2.i"
+	@echo "... src/linux/rt_ver2.s"
 .PHONY : help
 
 

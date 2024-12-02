@@ -218,9 +218,6 @@ InterrogatorComm_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 InterrogatorComm_SOURCE_DIR:STATIC=/home/robogram/FBGmaster
 
-//Path to a library.
-POSIX_RT_LIB:FILEPATH=/opt/rt_posix/lib/librtposix.so
-
 
 ########################
 # INTERNAL cache entries

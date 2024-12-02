@@ -12,11 +12,16 @@ include_directories(/opt/rt_posix/include)  # posix_rt.h 경로 추가
 link_directories(/opt/rt_posix/lib)
 
 # 실행 파일 1: FBGmaster
-set(CSV_SOURCES src/linux/main.cpp src/linux/linux_CInterrogator.cpp)
-add_executable(FBGmaster ${CSV_SOURCES})
+set(FBGmaster_SOURCES src/linux/main.cpp src/linux/linux_CInterrogator.cpp)
+add_executable(FBGmaster ${FBGmaster_SOURCES})
 target_link_libraries(FBGmaster PRIVATE rtposix)  # librtposix.so를 링크
 
 # 실행 파일 2: RT_FBGmaster
-set(TWO_SOURCES src/linux/rt_interrogator_task.cpp src/linux/linux_CInterrogator.cpp)
-add_executable(RT_FBGmaster ${TWO_SOURCES})
+set(RT_FBGmaster_SOURCES src/linux/rt_interrogator_task.cpp src/linux/linux_CInterrogator.cpp)
+add_executable(RT_FBGmaster ${RT_FBGmaster_SOURCES})
 target_link_libraries(RT_FBGmaster PRIVATE rtposix)  # librtposix.so를 링크
+
+# 실행 파일 3: RTver2_FBGmaster
+set(RTver2_FBGmaster_SOURCES src/linux/rt_ver2.cpp src/linux/linux_CInterrogator.cpp)
+add_executable(RTver2_FBGmaster ${RTver2_FBGmaster_SOURCES})
+target_link_libraries(RTver2_FBGmaster PRIVATE rtposix)  # librtposix.so를 링크
