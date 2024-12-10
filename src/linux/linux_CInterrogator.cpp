@@ -5,10 +5,18 @@
 const std::string micronsIP = "10.0.0.55";
 const uint16_t micronsPort = 51971;
 
-void CInterrogator::init()
+int CInterrogator::init()
 {
+    // Check IP/Port validity
+    if (micronsIP.empty() || micronsPort == 0) {
+        std::cerr << "Invalid IP or Port" << std::endl;
+        return -1; // invalid IP/port value
+    }
 
+    // check existing connection
+    if(!(udpSockfd < 0 && tcpSockfd < 0)) return -1;
 
+    return 0; // succeed to init
 }
 
 
@@ -31,8 +39,6 @@ int CInterrogator::disconnectUDP() {
         close(udpSockfd); // 소켓을 닫음
         udpSockfd = -1;   // 소켓 디스크립터 초기화
     }
-
-
 
 	return 0;
 }
@@ -105,20 +111,21 @@ int CInterrogator::connectUDP() {
     }
 
 
-    return 1; // 성공적으로 연결됨
+    return 0; // 성공적으로 연결됨
 }
 
 
 
-void CInterrogator::enablePeakDatagrams() {
+int CInterrogator::enablePeakDatagrams() {
 	if (tcpSockfd >= 0) {
 		udpState = 4;
 		std::string addressPort = "10.0.0.2 51970";
-		writeCommand("#EnableUdpPeakDatagrams", addressPort, 0);
+		if(!writeCommand("#EnableUdpPeakDatagrams", addressPort, 0)) return -1; // fail to enable 
 	}
 	else {
 		udpState = 5; // No TCP connection
 	}
+    return 0; // succeed to enable
 }
 
 
@@ -153,7 +160,7 @@ int CInterrogator::writeCommand(std::string command, std::string argument, uint8
 
 
 
-void CInterrogator::readPacket()
+int CInterrogator::readPacket()
 {
     uint8_t recvBuff[TOTAL_RECV_BUFF_BYTES] = {0};
     socklen_t addrLen = sizeof(server_addr);
@@ -165,15 +172,17 @@ void CInterrogator::readPacket()
         if (errno == EWOULDBLOCK || errno == EAGAIN) {
             std::cerr << "Timeout: No packet received within the specified time." << std::endl;
             memset(recvBuff, 0, sizeof(recvBuff)); // 타임아웃 시 버퍼 초기화
-            return;
+            return -1;
         } else {
             std::cerr << "Error receiving packet." << std::endl;
-            return;
+            return -1;
         }
     }
 
     //std::cout << "Packet received successfully." << std::endl;
     procPacket(recvBuff, packetSize); // 정상 패킷이 수신된 경우에만 처리
+
+    return 0;
 }
 
 
