@@ -54,12 +54,12 @@ public:
 
 public:
 
-	void init();
+	int init();
 	int connectUDP();
 	int disconnectUDP();
 	void enablePeakDatagrams();
 	int writeCommand(std::string command, std::string argument, uint8_t requestOptions);
-	void readPacket();
+	int readPacket();
 	void procPacket(uint8_t *packetChunk, int packetLength);
 	void getPeaks(double &tStamp, short *numpeaks, double *peaks, double *avgPeaks);
 
@@ -67,4 +67,3 @@ public:
 
 
 #endif
-

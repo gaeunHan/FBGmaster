@@ -9,15 +9,16 @@
 #include "posix_rt.h"
 #include "linux_CInterrogator.h"
 
+using namespace std;
+
 #define ETHERCAT_TASK_PERIOD (1000000) // 1 ms
 
 // FSM states
 enum InterrogatorState {
     INIT_STATE,
-    CONNECT_UDP_STATE,
-    ENABLE_PEAKS_STATE,
-    READ_PEAKS_STATE,
-    ERROR_STATE,
+    CONNECT_UDP,
+    ENABLE_PEAKS,
+    READ_PEAKS,
     DISCONNECT_STATE
 };
 
@@ -74,30 +75,28 @@ private:
     InterrogatorState processRTState() {
         switch(currentState) {
             case INIT_STATE: {
+                cout << "INIT_STATE" << endl;
                 if(interrogator.init()){
-                    DBG_ERROR("INIT failed.");
                     return DISCONNECT_STATE;
-                } 
-                return CONNECT_UDP_STATE;
+                }
+                return CONNECT_UDP;
             }
-            case CONNECT_UDP_STATE: {
-                if(interrogator.connectUDP()) {
+            case CONNECT_UDP: {
+                cout << "CONNECT_UDP" << endl;
+                if (interrogator.connectUDP() < 0) {
                     DBG_ERROR("UDP connection failed.");
                     return INIT_STATE;
                 }
-                return ENABLE_PEAKS_STATE;
+                return ENABLE_PEAKS;
             }
-            case ENABLE_PEAKS_STATE: {
-                if(interrogator.enablePeakDatagrams()){
-                    DBG_ERROR("Interrogator cannot be enabled.");
-                    return CONNECT_UDP_STATE;
-                }
-                return READ_PEAKS_STATE;
+            case ENABLE_PEAKS: {
+                interrogator.enablePeakDatagrams();
+                return READ_PEAKS;
             }
-            case READ_PEAKS_STATE: {
+            case READ_PEAKS: {
+                //cout << "READ_PEAKS" << endl;
                 if(interrogator.readPacket()){
-                    DBG_ERROR("Error receiving packet.");
-                    return ENABLE_PEAKS_STATE;
+                    return CONNECT_UDP;
                 }
                 
                 PeakData peakData;
@@ -111,12 +110,10 @@ private:
                 // Push peak data to queue (non-blocking)
                 peakDataQueue.push(peakData);
 
-                return READ_PEAKS_STATE;
+                return READ_PEAKS;
             }
             case DISCONNECT_STATE: {
-                if(interrogator.disconnectUDP()){
-                    DBG_ERROR("Error while disconnecting");
-                }
+                interrogator.disconnectUDP();
                 return INIT_STATE;
             }
         }

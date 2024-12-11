@@ -20,8 +20,3 @@ target_link_libraries(FBGmaster PRIVATE rtposix)  # librtposix.so를 링크
 set(RT_FBGmaster_SOURCES src/linux/rt_interrogator_task.cpp src/linux/linux_CInterrogator.cpp)
 add_executable(RT_FBGmaster ${RT_FBGmaster_SOURCES})
 target_link_libraries(RT_FBGmaster PRIVATE rtposix)  # librtposix.so를 링크
-
-# 실행 파일 3: RTver2_FBGmaster
-set(RTver2_FBGmaster_SOURCES src/linux/rt_ver2.cpp src/linux/linux_CInterrogator.cpp)
-add_executable(RTver2_FBGmaster ${RTver2_FBGmaster_SOURCES})
-target_link_libraries(RTver2_FBGmaster PRIVATE rtposix)  # librtposix.so를 링크

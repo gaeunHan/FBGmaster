@@ -8,15 +8,17 @@ const uint16_t micronsPort = 51971;
 int CInterrogator::init()
 {
     // Check IP/Port validity
-    if (micronsIP.empty() || micronsPort == 0) {
-        std::cerr << "Invalid IP or Port" << std::endl;
-        return -1; // invalid IP/port value
+    if (micronsIP.empty() || micronsPort == 0){
+        return -1;
+    }
+    // Check and close existing connections
+    if (tcpSockfd >= 0 || udpSockfd >= 0){
+        return -1;
     }
 
-    // check existing connection
-    if(!(udpSockfd < 0 && tcpSockfd < 0)) return -1;
+    // init success
+    return 0;
 
-    return 0; // succeed to init
 }
 
 
@@ -39,6 +41,8 @@ int CInterrogator::disconnectUDP() {
         close(udpSockfd); // 소켓을 닫음
         udpSockfd = -1;   // 소켓 디스크립터 초기화
     }
+
+
 
 	return 0;
 }
@@ -111,21 +115,20 @@ int CInterrogator::connectUDP() {
     }
 
 
-    return 0; // 성공적으로 연결됨
+    return 1; // 성공적으로 연결됨
 }
 
 
 
-int CInterrogator::enablePeakDatagrams() {
+void CInterrogator::enablePeakDatagrams() {
 	if (tcpSockfd >= 0) {
 		udpState = 4;
 		std::string addressPort = "10.0.0.2 51970";
-		if(!writeCommand("#EnableUdpPeakDatagrams", addressPort, 0)) return -1; // fail to enable 
+		writeCommand("#EnableUdpPeakDatagrams", addressPort, 0);
 	}
 	else {
 		udpState = 5; // No TCP connection
 	}
-    return 0; // succeed to enable
 }
 
 
